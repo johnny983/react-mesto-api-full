@@ -1,0 +1,24 @@
+.popup__button_inactive {
+    background: #fff;
+    width: 100%;
+    color: #ccc;
+    border: solid 1px #ccc;
+    border-radius: 1px;
+    margin: 48px 0 0 0;
+    padding: 0;
+    height: 50px;
+    cursor: pointer;
+    pointer-events: none;
+    user-select: none;
+  }
+  
+  .popup__button_inactive:hover {
+    background: #fff;
+    width: 100%;
+    color: #ccc;
+    border: solid 1px #ccc;
+    border-radius: 1px;
+    margin: 48px 0 0 0;
+    padding: 0;
+    height: 50px;
+  }

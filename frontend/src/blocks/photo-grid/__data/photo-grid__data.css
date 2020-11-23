@@ -1,0 +1,10 @@
+.photo-grid__data {
+  padding: 25px 15px 27px 21px;
+  box-sizing: border-box;
+  background: #fff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+}

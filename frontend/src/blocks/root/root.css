@@ -1,0 +1,19 @@
+#root {
+    min-width: 300px;
+    background: #000;
+    font-family: Inter, Tahoma, Verdana, Arial, sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    padding: 0 19px;
+    min-height: 100vh;
+}
+
+@media screen and (max-width : 768px) {
+  #root {
+    padding: 0;
+  }
+}

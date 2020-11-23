@@ -1,0 +1,8 @@
+.photo-grid__image {
+  object-fit: cover;
+  min-height: 282px;
+  height: 282px;
+  min-width: 100%;
+  cursor: pointer;
+  background: #333;
+}

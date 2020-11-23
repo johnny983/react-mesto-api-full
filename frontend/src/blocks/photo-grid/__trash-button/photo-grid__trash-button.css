@@ -1,0 +1,29 @@
+.photo-grid__trash-button {
+    content: '';
+    background: url('./../../../images/trash.svg') no-repeat top right;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    outline: 0;
+    border: 0;
+    right: 15px;
+    top: 18px;
+    cursor: pointer;
+    display: block
+  }
+
+  .photo-grid__trash-button_hidden {
+    display: none;
+  }
+  
+  .photo-grid__trash-button:hover {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    outline: 0;
+    border: 0;
+    right: 15px;
+    top: 18px;
+    opacity: 0.6;
+  }

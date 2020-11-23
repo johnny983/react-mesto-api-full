@@ -1,0 +1,16 @@
+.photo-grid__like-button {
+    background: url('./../../../images/photo-grid-like.svg') no-repeat;
+    width: 21px;
+    height: 21px;
+    border: 0;
+    align-self: center;
+    padding: 0;
+    outline: 0;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.photo-grid__like-button:hover {
+    background: url('./../../../images/photo-grid-like-hover.svg') no-repeat;
+}

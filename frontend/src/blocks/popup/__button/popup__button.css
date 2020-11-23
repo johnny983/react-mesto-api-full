@@ -1,0 +1,16 @@
+.popup__button {
+  background: #000;
+  width: 100%;
+  color: #fff;
+  border: solid #000;
+  border-radius: 2px;
+  margin: 48px 0 0 0;
+  padding: 0;
+  height: 50px;
+  cursor: pointer;
+}
+
+.popup__button:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border: 0;
+}
