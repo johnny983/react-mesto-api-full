@@ -1,15 +1,28 @@
 import './../index.css'
 import Main from './Main'
 import React from 'react'
+import {
+  useHistory,
+  Redirect,
+  Switch,
+  Route,
+} from "react-router-dom"
 import Header from './Header'
 import Footer from './Footer'
 import { api } from './../utils/api'
+import { apiAuth } from './../utils/apiAuth'
 import EditProfilePopup from './EditProfilePopup'
 import { CurrentUserContext } from './../context/CurrentUserContext'
 import CardDeletePopup from './CardDeletePopup'
 import EditAvatarPopup from './EditAvatarPopup'
+import ProtectedRoute from './ProtectedRoute'
+import { setToken } from './../utils/token'
 import AddPlacePopup from './AddPlacePopup'
+import { getToken } from './../utils/token'
 import ImagePopup from './ImagePopup'
+import Register from './Register'
+import Login from './Login'
+
 
 function App() {
 
@@ -17,10 +30,15 @@ function App() {
   const [isEditProfilePopupOpen, editProfilePopupOpen] = React.useState(false)
   const [isCardDeletePopupOpen, cardDeletePopupOpen] = React.useState(null)
   const [isAddPlacePopupOpen, addPlacePopupOpen] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState('')
   const [currentUser, setCurrentUser] = React.useState({})
   const [selectedCard, selectCard] = React.useState(null)
+  const [regStatus, setRegStatus] = React.useState(false)
+  const [loggedIn, setLoggedIn] = React.useState(true)
+  const [userData, setUserData] = React.useState({})
   const [loader, setLoader] = React.useState(true)
   const [cards, setCards] = React.useState([])
+  const history = useHistory()
 
   React.useEffect(() => {
     api.getCards('/cards')
@@ -121,43 +139,148 @@ function App() {
       .catch(error => console.log(error))
   }
 
-  return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <>
-        <Header />
-        <Main
-          onEditAvatar={handleEditAvatarClick}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onCardClick={handleCardClick}
-          onTrashClick={handleTrashClick}
-          onCardLike={handleCardLike}
+
+  const handleLogin = (userData) => {
+    setUserData(userData)
+    setLoggedIn(true)
+    history.push('/')
+  }
+
+  const tokenCheck = () => {
+    const jwt = getToken()
+
+    if (!jwt) {
+      setLoggedIn(false);
+    }
+
+    apiAuth.getData('/users/me', jwt)
+    .then((data) => {
+      if (data) {
+        const userInfo = {
+          id: data.data._id,
+          email: data.data.email
+        }
+        setUserData(userInfo)
+        setLoggedIn(true)
+      }
+    })
+    .catch(err => console.log(err));
+  }
+
+  const register = (URL, method, userData) => {
+  apiAuth.auth(URL, method, userData)
+      .then((res) => {
+        if (res.statusCode !== 400)
+        setErrorMessage('')
+        setRegStatus('success')
+      })
+    .catch((err) => {
+      setRegStatus('decline')
+      setErrorMessage(err)
+    })
+  }
+
+  const login = (URL, method, userData) => {
+    apiAuth.auth(URL, method, userData)
+    .then((data) => {
+      if (data) {
+        setErrorMessage('Что-то пошло не так!')
+      }
+
+      if (data.token) {
+        setToken(data.token)
+        setErrorMessage('')
+        handleLogin(data.user)
+      }
+    })
+    .catch((err) => {
+      setErrorMessage(err)
+    })
+  }
+
+  React.useEffect(() => {
+    tokenCheck();
+  }, [ loggedIn ]);
+
+return (
+      <CurrentUserContext.Provider value={currentUser}>
+        <Header
+          setLoggedIn={setLoggedIn}
+          loggedIn={loggedIn}
+          userData={userData}
+        />
+
+        <Switch>
+          <ProtectedRoute exact path="/" loggedIn={loggedIn}>
+            <Main
+              onEditProfile={handleEditProfileClick}
+              onEditAvatar={handleEditAvatarClick}
+              onAddPlace={handleAddPlaceClick}
+              onCardDelete={handleCardDelete}
+              onTrashClick={handleTrashClick}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              setLoader={setLoader}
+              loader={loader}
+              cards={cards}
+            />
+            <Footer />
+          </ProtectedRoute>
+
+          <Route path="/signup">
+            <Register
+              errorMessage={errorMessage}
+              setRegStatus={setRegStatus}
+              regStatus={regStatus}
+              register={register}
+            />
+          </Route>
+
+          <Route path="/signin">
+            <Login
+              handleLogin={ handleLogin }
+              login={login}
+            />
+          </Route>
+
+          <Route>
+            {
+              loggedIn ?
+              <Redirect to="/" /> :
+              <Redirect to="/signin" />
+            }
+          </Route>
+        </Switch>
+
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onUpdateUser={handleUpdateUser}
+          onClose={closeAllPopups}
+        />
+
+        <EditAvatarPopup
+          onUpdateAvatar={handleUpdateAvatar}
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+        />
+
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onAddPlace={handleAddPlace}
+          onClose={closeAllPopups}
+        />
+
+        <CardDeletePopup
           onCardDelete={handleCardDelete}
-          cards={cards}
-          setLoader={setLoader}
-          loader={loader} />
-
-        <EditProfilePopup isOpen={isEditProfilePopupOpen}
+          isOpen={isCardDeletePopupOpen}
           onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser} />
+        />
 
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen}
+        <ImagePopup
           onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar} />
-
-        <AddPlacePopup isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlace={handleAddPlace} />
-
-        <CardDeletePopup isOpen={isCardDeletePopupOpen}
-          onClose={closeAllPopups}
-          onCardDelete={handleCardDelete} />
-
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-
-        <Footer />
-      </>
-    </CurrentUserContext.Provider>
+          card={selectedCard}
+        />
+      </CurrentUserContext.Provider>
   );
 }
 

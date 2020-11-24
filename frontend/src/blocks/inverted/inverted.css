@@ -1,0 +1,4 @@
+.inverted {
+  filter: invert(100%);
+  text-align: center;
+}

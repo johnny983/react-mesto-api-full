@@ -1,0 +1,7 @@
+.popup__register {
+  text-align: center;
+  min-height: 308px;
+  display: flex;
+  align-items: flex-end;
+  justify-items: center;
+}

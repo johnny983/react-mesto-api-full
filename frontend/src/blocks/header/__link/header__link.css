@@ -1,0 +1,8 @@
+.header__link:link,
+.header__link:visited,
+.header__link:active,
+.header__link:hover {
+  padding-left: 24px;
+  text-decoration: none;
+  color: #fff;
+}

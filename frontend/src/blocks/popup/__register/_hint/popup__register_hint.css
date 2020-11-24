@@ -1,0 +1,11 @@
+.popup__register_hint {
+  color: #000;
+  font-size: 14px;
+  padding-top: 10px;
+}
+
+.popup__register_link:link,
+.popup__register_link:visited,
+.popup__register_link:active {
+  color: #000;
+}

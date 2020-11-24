@@ -1,0 +1,11 @@
+.popup__container_auth {
+  max-width: 430px;
+  background: #000;
+  min-height: auto;
+  margin: 0 auto;
+  border-radius: 10px;
+  padding: 60px 36px 36px 36px;
+  box-sizing: border-box;
+  position: relative;
+}
+
