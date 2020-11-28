@@ -24,7 +24,8 @@ function Card({ loader, setLoader, onCardClick, onCardLike, onTrashClick, card }
   }
 
   const currentUser = React.useContext(CurrentUserContext)
-  const isOwn = card.owner._id === currentUser._id;
+  const isOwn = card.ownerId === currentUser._id;
+
 
   const trashButtonClass = (
     `${isOwn ? 'photo-grid__trash-button' :

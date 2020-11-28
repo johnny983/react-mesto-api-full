@@ -4,7 +4,6 @@ import InfoTooltip from './InfoTooltip'
 
 
 function AuthForm(props) {
-
   const location = useLocation();
 
   const [ inputData, setInputData] = React.useState({
@@ -15,7 +14,7 @@ function AuthForm(props) {
   const handleChange = (e) => {
     const { name, value } = e.target
     setInputData((prevData) => ({
-      ...inputData,
+      ...prevData,
       [name]: value
     }))
   }
@@ -28,7 +27,7 @@ function AuthForm(props) {
 const handleLoginSubmit = (e) => {
     e.preventDefault();
     props.login(location.pathname, 'POST', inputData)
-    setInputData({ email: '', password: ''});
+    // setInputData({ email: '', password: ''});
   }
 
   return (

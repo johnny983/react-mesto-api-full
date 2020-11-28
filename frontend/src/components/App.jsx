@@ -6,6 +6,7 @@ import {
   Redirect,
   Switch,
   Route,
+  useLocation,
 } from "react-router-dom"
 import Header from './Header'
 import Footer from './Footer'
@@ -30,7 +31,7 @@ function App() {
   const [isEditProfilePopupOpen, editProfilePopupOpen] = React.useState(false)
   const [isCardDeletePopupOpen, cardDeletePopupOpen] = React.useState(null)
   const [isAddPlacePopupOpen, addPlacePopupOpen] = React.useState(false)
-  const [errorMessage, setErrorMessage] = React.useState('')
+  const [errorMessage, setErrorMessage] = React.useState(null)
   const [currentUser, setCurrentUser] = React.useState({})
   const [selectedCard, selectCard] = React.useState(null)
   const [regStatus, setRegStatus] = React.useState(false)
@@ -39,21 +40,7 @@ function App() {
   const [loader, setLoader] = React.useState(true)
   const [cards, setCards] = React.useState([])
   const history = useHistory()
-
-  React.useEffect(() => {
-    api.getCards('/cards')
-      .then((items) => {
-        const card = items.map(card => ({
-          _id: card._id,
-          link: card.link,
-          name: card.name,
-          likes: card.likes,
-          owner: card.owner
-        }))
-        setCards(card)
-      })
-      .catch(error => console.log(error))
-  }, [])
+  const location = useLocation()
 
   const handleCardLike = (card) => {
     const isLiked = card.likes.some(likeOwner => likeOwner._id === currentUser._id)
@@ -77,12 +64,6 @@ function App() {
       })
       .catch(error => console.log(error))
   }
-
-  React.useEffect(() => {
-    api.getProfile('/users/me')
-      .then(result => setCurrentUser(result))
-      .catch(error => console.log(error))
-  }, [])
 
   const handleEditAvatarClick = () => {
     editAvatarPopupOpen(true)
@@ -132,6 +113,7 @@ function App() {
 
   const handleAddPlace = (newPlace) => {
     api.addUserCard('/cards', 'POST', newPlace.title, newPlace.url)
+
       .then(newCard => {
         setCards([newCard, ...cards])
         closeAllPopups()
@@ -156,11 +138,11 @@ function App() {
     apiAuth.getData('/users/me', jwt)
     .then((data) => {
       if (data) {
-        const userInfo = {
-          id: data.data._id,
-          email: data.data.email
-        }
-        setUserData(userInfo)
+        // const userInfo = {
+        //   id: data.data._id,
+        //   email: data.data.email
+        // }
+        // setUserData(userInfo)
         setLoggedIn(true)
       }
     })
@@ -183,14 +165,14 @@ function App() {
   const login = (URL, method, userData) => {
     apiAuth.auth(URL, method, userData)
     .then((data) => {
-      if (data) {
+      if (!data) {
         setErrorMessage('Что-то пошло не так!')
       }
 
       if (data.token) {
         setToken(data.token)
         setErrorMessage('')
-        handleLogin(data.user)
+        handleLogin(userData)
       }
     })
     .catch((err) => {
@@ -201,6 +183,31 @@ function App() {
   React.useEffect(() => {
     tokenCheck();
   }, [ loggedIn ]);
+
+  React.useEffect(() => {
+    setErrorMessage(null);
+  }, [ location.pathname ]);
+
+  React.useEffect(() => {
+    api.getCards('/cards')
+      .then((items) => {
+        const card = items.map(card => ({
+          _id: card._id,
+          link: card.link,
+          name: card.name,
+          likes: card.likes,
+          ownerId: card.ownerId
+        }))
+        setCards(card)
+      })
+      .catch(error => console.log(error))
+  }, [])
+
+  React.useEffect(() => {
+    api.getProfile('/users/me')
+      .then(result => setCurrentUser(result))
+      .catch(error => console.log(error))
+  }, [])
 
 return (
       <CurrentUserContext.Provider value={currentUser}>
@@ -238,7 +245,8 @@ return (
 
           <Route path="/signin">
             <Login
-              handleLogin={ handleLogin }
+              errorMessage={errorMessage}
+              handleLogin={handleLogin}
               login={login}
             />
           </Route>

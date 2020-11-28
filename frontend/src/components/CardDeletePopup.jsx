@@ -9,12 +9,15 @@ function CardDeletePopup(props) {
   }
 
   return (
-    <PopupWithForm isOpen={props.isOpen}
-      title={'Вы уверены?'}
-      name={'confirm'} buttonTitle={'Да'}
+    <PopupWithForm
+      onSubmit={handleDeleteConfirm}
       onClose={props.onClose}
-      onSubmit={handleDeleteConfirm} />
+      isOpen={props.isOpen}
+      title={'Вы уверены?'}
+      buttonTitle={'Да'}
+      name={'confirm'}
+    />
   )
 }
 
-export default CardDeletePopup 
+export default CardDeletePopup
