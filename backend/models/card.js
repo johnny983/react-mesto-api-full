@@ -9,7 +9,7 @@ const cardSchema = new Schema({
   },
   link: {
     type: String,
-    minlength: 2,
+    minlength: 11,
     required: true,
     validate: {
       validator(v) {
@@ -17,6 +17,10 @@ const cardSchema = new Schema({
       },
       message: 'Вы ввели некорректный URL',
     },
+  },
+  ownerId: {
+    type: Types.ObjectId,
+    required: true,
   },
   likes: [
     {

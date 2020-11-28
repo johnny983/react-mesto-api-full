@@ -1,24 +1,87 @@
-const { NODE_ENV, JWT_SECRET } = process.env;
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { NODE_ENV, JWT_SECRET, SALT_ROUND } = require('../configs');
 const User = require('../models/user');
+const {
+  Error400, Error401, Error404, Error409,
+} = require('../errors/index');
 
-const login = (req, res) => {
+const getCurrentUser = async (req, res) => {
+  console.log(req.body);
+  try {
+    const user = await User.findOne({ _id: req.user._id });
+    if (!user) {
+      throw new Error404('Нет пользователя с таким id');
+    }
+    return res.status(200).send(user);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      throw new Error400('Нет пользователя с таким id');
+    }
+    throw new Error();
+  }
+}
+
+const createUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      throw new Error400('Ошибочные данные');
+    }
+
+    User.findOne({ email })
+      .then((user) => {
+        if (user) {
+          throw new Error409('Такой email уже зарегистрирован');
+        }
+        return bcrypt.hash(password, SALT_ROUND)
+          .then((hash) => User.create({
+            email,
+            password: hash, // записываем хеш в базу
+          }))
+          .then(({ email, _id }) => {
+            res.status(200).send({ email, _id });
+          })
+          .catch((error) => res.status(500).send({ message: error }));
+      });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      throw new Error400('Ошибочные данные');
+    }
+    throw new Error();
+  }
+};
+
+const login = async (req, res) => {
   const { email, password } = req.body;
 
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expires: '7d' },
-      );
-      res.status(200).send(token);
-    })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
-    });
+  if (!email || !password) {
+    throw new Error400('Ошибочные данные');
+  }
+
+  try {
+    User.findOne({ email }).select('+password')
+      .then((user) => {
+        if (!user) {
+          throw new Error401('Неправильный логин или пароль');
+        }
+        bcrypt.compare(password, user.password).then((matched) => {
+          if (matched) {
+            const token = jwt.sign(
+              { _id: user._id },
+              NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+              { expiresIn: '7d' },
+            );
+            return res.send({ token });
+          }
+          throw new Error401('Неправильный логин или пароль');
+        });
+        // res.status(200).send({ _id: user._id });
+      });
+  } catch (error) {
+    throw new Error();
+  }
 };
 
 const changeAvatar = async (req, res) => {
@@ -33,9 +96,9 @@ const changeAvatar = async (req, res) => {
     return res.status(200).send(updatedAvatar);
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: error.message });
+      throw new Error400('Ошибочные данные');
     }
-    return res.status(500).send({ message: error.message });
+    throw new Error();
   }
 };
 
@@ -51,9 +114,9 @@ const changeUserInfo = async (req, res) => {
     return res.status(200).send(updatedUser);
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: error.message });
+      throw new Error400('Ошибочные данные');
     }
-    return res.status(500).send({ message: error.message });
+    throw new Error();
   }
 };
 
@@ -61,12 +124,12 @@ const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
     if (users.length === 0) {
-      res.status(404).send({ message: 'Не создано ни одного пользователя' });
+      throw new Error404('Не создано ни одного пользователя');
     } else {
       res.status(200).send(users);
     }
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    throw new Error();
   }
 };
 
@@ -74,39 +137,23 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).send({ message: 'Нет пользователя с таким id' });
+      throw new Error404('Нет пользователя с таким id');
     }
     return res.status(200).send(user);
   } catch (error) {
     if (error.name === 'CastError') {
-      return res.status(400).send({ message: `Нет пользователя id = ${req.params.id}` });
+      throw new Error400('Ошибочные данные');
     }
-    return res.status(500).send({ message: error.message });
-  }
-};
-
-const createUser = async (req, res) => {
-  try {
-    const {
-      name, about, avatar, email, password,
-    } = req.body;
-    const newUser = await User.create({
-      name, about, avatar, email, password,
-    });
-    return res.status(200).send(newUser);
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      return res.status(400).send({ message: error.message });
-    }
-    return res.status(500).send({ message: error.message });
+    throw new Error();
   }
 };
 
 module.exports = {
   login,
   getUsers,
-  getUserById,
   createUser,
-  changeUserInfo,
+  getUserById,
   changeAvatar,
+  changeUserInfo,
+  getCurrentUser,
 };

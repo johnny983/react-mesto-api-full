@@ -1,12 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const { errors } = require('celebrate');
+
+const corsOptions = {
+  origin: 'http://localhost:5000',
+  optionsSuccessStatus: 200,
+};
 
 const app = express();
 
-// const url = 'https://whywetrain';
-// const urlRegExp = /^https?:\/\/[\w*-?.]*\/?$/i;
-
-// console.log(urlRegExp.test(url));
+app.use(cors(corsOptions));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -17,31 +21,38 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 const { PORT = 3000 } = process.env;
 
-const auth = require('./middlewares/auth.js');
 const cardsRoutes = require('./routes/cards.js');
-const { usersRoutes, login, createUser } = require('./routes/users.js');
+const usersRoutes = require('./routes/users.js');
+const createUser = require('./routes/users.js');
+const login = require('./routes/users.js');
+const auth = require('./middlewares/auth.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5f9c257a56c53c9434ceb778',
-  };
+app.use(requestLogger);
+
+app.use('/cards', auth, cardsRoutes);
+app.use('/users', auth, usersRoutes);
+app.use('/', createUser);
+app.use('/', login);
+
+app.use(errorLogger);
+
+app.use(errors());
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+
   next();
-});
-
-app.post('/signin', login);
-app.post('/signup', createUser);
-
-app.use(auth);
-
-app.post('/cards', auth, cardsRoutes);
-app.post('/users', auth, usersRoutes);
-app.get('/users', auth, usersRoutes);
-
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
 
 app.listen(PORT, () => {

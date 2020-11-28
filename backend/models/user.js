@@ -26,6 +26,7 @@ const userSchema = new Schema({
       },
       message: 'Вы ввели некорректный URL',
     },
+    default: 'https://img2.badfon.ru/original/1366x768/b/86/planeta-zvezdy-bliki-svechenie.jpg',
   },
   email: {
     type: String,
@@ -41,7 +42,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
-    minlength: 7,
+    select: false,
   },
 });
 
