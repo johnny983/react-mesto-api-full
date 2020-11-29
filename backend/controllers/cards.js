@@ -33,7 +33,7 @@ const getCards = (req, res, next) => Card
   .find({})
   .then((cards) => {
     if (cards.length === 0 || !cards) {
-      res.status(200).send([]);
+      return [];
     }
     res.status(200).send(cards);
   })
