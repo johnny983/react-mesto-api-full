@@ -127,9 +127,7 @@ const getUsers = (req, res, next) => User
 const getUserById = (req, res, next) => User
   .findById(req.params.id)
   .then((user) => {
-    if (!user) {
-      res.status(200).send(user || 'Пользователя не существует');
-    }
+    res.status(200).send(user || 'Пользователя не существует');
   })
   .catch(next);
 
