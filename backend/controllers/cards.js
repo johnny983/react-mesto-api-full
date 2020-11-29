@@ -16,18 +16,12 @@ const createCard = async (req, res) => {
   }
 };
 
-const deleteCard = async (req, res) => {
-  try {
-    const card = await Card.findByIdAndDelete(req.params.cardId);
-    if (!card) {
-      throw new Error404('Карточка для удаления не найдена');
-    } else {
-      res.status(200).send(card);
-    }
-  } catch (error) {
-    throw new Error();
-  }
-};
+const deleteCard = (req, res, next) => Card
+  .findByIdAndDelete(req.params.cardId)
+  .then((card) => {
+    res.status(200).send(card || 'Карточка для удаления не найдена');
+  })
+  .catch(next);
 
 const getCards = (req, res, next) => Card
   .find({})
