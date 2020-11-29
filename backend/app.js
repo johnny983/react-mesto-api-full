@@ -28,6 +28,9 @@ app.use(express.json());
 
 app.use(requestLogger);
 
+app.use('/cards', auth, cardsRoutes);
+app.use('/users', auth, usersRoutes);
+
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
@@ -36,8 +39,6 @@ app.get('/crash-test', () => {
 
 app.use('/', createUser);
 app.use('/', login);
-app.use('/cards', auth, cardsRoutes);
-app.use('/users', auth, usersRoutes);
 
 app.use(errorLogger);
 
