@@ -3,6 +3,11 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const { errors } = require('celebrate');
 
+// const corsOptions = {
+//   origin: 'http://localhost:5000',
+//   optionsSuccessStatus: 200,
+// };
+
 const app = express();
 
 app.use(cors());
