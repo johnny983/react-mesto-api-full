@@ -124,20 +124,15 @@ const getUsers = (req, res, next) => User
   })
   .catch(next);
 
-const getUserById = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
+const getUserById = (req, res, next) => User.
+  findById(req.params.id)
+  .then((user) => {
     if (!user) {
       throw new Error404('Нет пользователя с таким id');
     }
-    return res.status(200).send(user);
-  } catch (error) {
-    if (error.name === 'CastError') {
-      throw new Error400('Ошибочные данные');
-    }
-    throw new Error();
-  }
-};
+    res.status(200).send(user);
+  })
+  .catch(next);
 
 module.exports = {
   login,
