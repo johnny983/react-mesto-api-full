@@ -33,7 +33,7 @@ const getCards = (req, res, next) => Card
   .find({})
   .then((cards) => {
     if (cards.length === 0) {
-      throw new Error404('Не создано ни одного пользователя');
+      throw new Error404('Не создано ни одной карточки');
     }
     res.status(200).send(cards);
   })
