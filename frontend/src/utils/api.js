@@ -125,7 +125,7 @@ class Api {
 }
 
 export const api = new Api({
-  baseURL: 'http://api.localhost:3000',
+  baseURL: 'http://localhost:3000',
   headers: {
     // authorization: apiToken,
     'Accept': 'application/json',
