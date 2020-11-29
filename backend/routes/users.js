@@ -6,14 +6,14 @@ const {
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email().min(7),
-    password: Joi.string().required(),
+    email: Joi.string().email().min(7),
+    password: Joi.string(),
   }),
 }), createUser);
 router.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email().min(7),
-    password: Joi.string().required(),
+    email: Joi.string().email().min(7),
+    password: Joi.string(),
   }),
 }), login);
 router.get('/me', celebrate({
@@ -36,8 +36,8 @@ router.patch('/me', celebrate({
     Authorization: Joi.string().token(),
   }).unknown(true),
   body: Joi.object().keys({
-    name: Joi.string().required(),
-    about: Joi.string().required(),
+    name: Joi.string(),
+    about: Joi.string(),
   }),
 }), changeUserInfo);
 router.patch('/me/avatar', celebrate({
@@ -45,7 +45,7 @@ router.patch('/me/avatar', celebrate({
     Authorization: Joi.string().token(),
   }).unknown(true),
   body: Joi.object().keys({
-    avatar: Joi.string().regex(/^https?:\/\/[\w*-?./]*\/?$/i).required(),
+    avatar: Joi.string().regex(/^https?:\/\/[\w*-?./]*\/?$/i),
   }),
 }), changeAvatar);
 
