@@ -191,7 +191,6 @@ function App() {
   React.useEffect(() => {
     api.getCards('/cards')
       .then((items) => {
-        console.log(items)
         const card = items.map(card => ({
           _id: card._id,
           link: card.link,
