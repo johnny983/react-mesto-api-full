@@ -124,13 +124,10 @@ const getUsers = (req, res, next) => User
   })
   .catch(next);
 
-const getUserById = (req, res, next) => User.
-  findById(req.params.id)
+const getUserById = (req, res, next) => User
+  .findById(req.params.id)
   .then((user) => {
-    if (!user) {
-      throw new Error404('Нет пользователя с таким id');
-    }
-    res.status(200).send(user);
+    res.status(200).send(user || 'Нет пользователя с таким id');
   })
   .catch(next);
 
