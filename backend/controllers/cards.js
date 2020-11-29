@@ -29,16 +29,6 @@ const deleteCard = async (req, res) => {
   }
 };
 
-const getUsers = (req, res, next) => User
-  .find({})
-  .then((users) => {
-    if (users.length === 0) {
-      throw new Error404('Не создано ни одного пользователя');
-    }
-    res.status(200).send(users);
-  })
-  .catch(next);
-
 const getCards = (req, res, next) => Card
   .find({})
   .then((cards) => {
