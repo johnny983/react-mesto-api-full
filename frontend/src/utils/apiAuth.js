@@ -46,7 +46,7 @@ class ApiAuth {
 }
 
 export const apiAuth = new ApiAuth({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://api.johnnyonthecloud.students.nomoredomains.monster',
   headers: {
     authorization: apiToken,
     'Accept': 'application/json',
