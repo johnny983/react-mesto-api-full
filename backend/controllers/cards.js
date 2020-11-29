@@ -29,17 +29,14 @@ const deleteCard = async (req, res) => {
   }
 };
 
-const getCards = async (req, res) => {
-  try {
-    const cards = await Card.find({});
+const getCards = (req, res, next) => Card
+  .find({})
+  .then((cards) => {
     if (cards.length === 0) {
-      throw new Error404('Карточки отсутствуют');
-    } else {
-      res.status(200).send(cards);
+      throw new Error404('Не создано ни одного пользователя');
     }
-  } catch (error) {
-    throw new Error();
-  }
-};
+    res.status(200).send(cards);
+  })
+  .catch(next);
 
 module.exports = { createCard, deleteCard, getCards };

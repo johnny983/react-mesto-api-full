@@ -8,11 +8,11 @@ const {
 
 const getCurrentUser = (req, res, next) => User
   .findOne({ _id: req.user._id })
-  .then((user => {
+  .then(((user) => {
     if (!user) {
       throw new Error404('Нет пользователя с таким id');
     }
-  res.status(200).send(user);
+    res.status(200).send(user);
   }))
   .catch(next);
 
