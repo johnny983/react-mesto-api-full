@@ -33,7 +33,7 @@ const getCards = (req, res, next) => Card
   .find({})
   .then((cards) => {
     if (cards.length === 0 || !cards) {
-      throw new Error404('Карточки отсутствуют');
+      res.status(200).send('Карточки отсутствуют');
     }
     res.status(200).send(cards);
   })
