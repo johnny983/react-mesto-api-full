@@ -124,18 +124,18 @@ const getUsers = (req, res, next) => User
   })
   .catch(next);
 
-// const getUserById = (req, res, next) => User
-//   .findById(req.params.id)
-//   .then((user) => {
-//     res.status(200).send(user || 'Пользователя не существует');
-//   })
-//   .catch(next);
+const getUserById = (req, res, next) => User
+  .findById(req.params.id)
+  .then((user) => {
+    res.status(200).send(user || 'Пользователя не существует');
+  })
+  .catch(next);
 
 module.exports = {
   login,
   getUsers,
   createUser,
-  // getUserById,
+  getUserById,
   changeAvatar,
   changeUserInfo,
   getCurrentUser,
