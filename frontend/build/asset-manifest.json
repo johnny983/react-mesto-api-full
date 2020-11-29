@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.30323b6c.chunk.css",
+    "main.js": "/static/js/main.e7ce7ec5.chunk.js",
+    "main.js.map": "/static/js/main.e7ce7ec5.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.1fdde452.js",
+    "runtime-main.js.map": "/static/js/runtime-main.1fdde452.js.map",
+    "static/js/2.8ea054ab.chunk.js": "/static/js/2.8ea054ab.chunk.js",
+    "static/js/2.8ea054ab.chunk.js.map": "/static/js/2.8ea054ab.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.30323b6c.chunk.css.map": "/static/css/main.30323b6c.chunk.css.map",
+    "static/js/2.8ea054ab.chunk.js.LICENSE.txt": "/static/js/2.8ea054ab.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/static/media/trash.a274c87c.svg",
+    "static/media/logo-mesto.a307e1c4.svg": "/static/media/logo-mesto.a307e1c4.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1fdde452.js",
+    "static/js/2.8ea054ab.chunk.js",
+    "static/css/main.30323b6c.chunk.css",
+    "static/js/main.e7ce7ec5.chunk.js"
+  ]
+}
