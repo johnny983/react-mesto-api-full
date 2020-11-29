@@ -125,7 +125,7 @@ class Api {
 }
 
 export const api = new Api({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://api.johnnyonthecloud.students.nomoredomains.monster',
   headers: {
     // authorization: apiToken,
     'Accept': 'application/json',
