@@ -7,6 +7,7 @@ const {
 } = require('../errors/index');
 
 const getCurrentUser = async (req, res) => {
+  console.log(req.body);
   try {
     const user = await User.findOne({ _id: req.user._id });
     if (!user) {
@@ -119,18 +120,15 @@ const changeUserInfo = async (req, res) => {
   }
 };
 
-const getUsers = async (req, res) => {
-  try {
-    const users = await User.find({});
+const getUsers = (req, res, next) => User
+  .find({})
+  .then((users) => {
     if (users.length === 0) {
       throw new Error404('Не создано ни одного пользователя');
-    } else {
-      res.status(200).send(users);
     }
-  } catch (error) {
-    throw new Error();
-  }
-};
+    res.status(200).send(users);
+  })
+  .catch(next);
 
 const getUserById = async (req, res) => {
   try {
