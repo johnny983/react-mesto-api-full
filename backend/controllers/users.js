@@ -7,7 +7,6 @@ const {
 } = require('../errors/index');
 
 const getCurrentUser = async (req, res) => {
-  console.log(req.body);
   try {
     const user = await User.findOne({ _id: req.user._id });
     if (!user) {
