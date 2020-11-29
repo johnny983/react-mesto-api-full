@@ -6,16 +6,6 @@ const {
   Error400, Error401, Error404, Error409,
 } = require('../errors/index');
 
-const getUsers = (req, res, next) => User
-  .find({})
-  .then((users) => {
-    if (users.length === 0) {
-      throw new Error404('Не создано ни одного пользователя');
-    }
-    res.status(200).send(users);
-  })
-  .catch(next);
-
 const getCurrentUser = (req, res, next) => User
   .findOne({ _id: req.user._id })
   .then((user => {
