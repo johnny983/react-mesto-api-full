@@ -32,10 +32,7 @@ const deleteCard = async (req, res) => {
 const getCards = (req, res, next) => Card
   .find({})
   .then((cards) => {
-    if (cards.length === 0 || !cards) {
-      return [];
-    }
-    res.status(200).send(cards);
+    res.status(200).send(cards || []);
   })
   .catch(next);
 
