@@ -4,13 +4,13 @@ const { getCards, createCard, deleteCard } = require('../controllers/cards');
 
 router.get('/', celebrate({
   headers: Joi.object().keys({
-    Authorization: Joi.string().token(),
+    authorization: Joi.string().required().length(179),
   }).unknown(true),
 }), getCards);
 
 router.post('/', celebrate({
   headers: Joi.object().keys({
-    Authorization: Joi.string().token(),
+    authorization: Joi.string().required().length(179),
   }).unknown(true),
   body: Joi.object().keys({
     name: Joi.string().required(),
@@ -18,9 +18,13 @@ router.post('/', celebrate({
   }),
 }), createCard);
 
+// headers: Joi.object({
+//             token: Joi.string().token().length(20).required()
+//         }).unknown()
+
 router.delete('/:cardId', celebrate({
   headers: Joi.object().keys({
-    Authorization: Joi.string().token(),
+    authorization: Joi.string().required().length(179),
   }).unknown(true),
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),

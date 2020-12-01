@@ -18,7 +18,7 @@ router.post('/signin', celebrate({
 }), login);
 router.get('/me', celebrate({
   headers: Joi.object().keys({
-    Authorization: Joi.string().token(),
+    authorization: Joi.string().required().length(179),
   }).unknown(true),
 }), getCurrentUser);
 router.get('/:id', celebrate({
@@ -28,12 +28,12 @@ router.get('/:id', celebrate({
 }), getUserById);
 router.get('/', celebrate({
   headers: Joi.object().keys({
-    Authorization: Joi.string().token(),
+    authorization: Joi.string().required().length(179),
   }).unknown(true),
 }), getUsers);
 router.patch('/me', celebrate({
   headers: Joi.object().keys({
-    Authorization: Joi.string().token(),
+    authorization: Joi.string().required().length(179),
   }).unknown(true),
   body: Joi.object().keys({
     name: Joi.string().required(),
@@ -42,7 +42,7 @@ router.patch('/me', celebrate({
 }), changeUserInfo);
 router.patch('/me/avatar', celebrate({
   headers: Joi.object().keys({
-    Authorization: Joi.string().token(),
+    authorization: Joi.string().required().length(179),
   }).unknown(true),
   body: Joi.object().keys({
     avatar: Joi.string().regex(/^https?:\/\/[\w*-?./]*\/?$/i).required(),
