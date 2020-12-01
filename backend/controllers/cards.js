@@ -1,19 +1,14 @@
 const Card = require('../models/card');
-const { Error400, Error404 } = require('../errors/index');
 
-const createCard = async (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const ownerId = req.user._id;
 
-  try {
-    const newCard = await Card.create({ name, link, ownerId });
-    return res.status(200).send(newCard);
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      throw new Error400('Ошибочные данные');
-    }
-    throw new Error();
-  }
+  Card.create({ name, link, ownerId })
+    .then((newCard) => {
+      res.status(200).send(newCard || 'Ошибочные данные');
+    })
+    .catch(next);
 };
 
 const deleteCard = (req, res, next) => Card

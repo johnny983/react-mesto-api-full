@@ -23,7 +23,7 @@ router.delete('/:cardId', celebrate({
     Authorization: Joi.string().token(),
   }).unknown(true),
   params: Joi.object().keys({
-    id: Joi.string().alphanum().length(24),
+    cardId: Joi.string().alphanum().length(24),
   }),
 }), deleteCard);
 
