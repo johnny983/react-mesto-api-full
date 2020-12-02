@@ -1,4 +1,3 @@
-// import { apiToken } from './utils.js'
 import { getToken } from './../utils/token'
 
 class Api {
@@ -61,8 +60,8 @@ class Api {
             method: method,
             headers: this.getHeaders(),
             body: JSON.stringify({
-                name: name,
-                link: link,
+                name,
+                link,
             })
         })
             .then(result => {
@@ -127,7 +126,6 @@ class Api {
 export const api = new Api({
   baseURL: 'http://api.johnnyonthecloud.students.nomoredomains.monster',
   headers: {
-    // authorization: apiToken,
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   }

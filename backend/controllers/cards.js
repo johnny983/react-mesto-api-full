@@ -1,4 +1,5 @@
 const Card = require('../models/card');
+const { Error404, Error403 } = require('../errors/index');
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -12,9 +13,23 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => Card
-  .findByIdAndDelete(req.params.cardId)
+  .findById(req.params.cardId)
   .then((card) => {
-    res.status(200).send(card || 'Карточка для удаления не найдена');
+    if (!card) {
+      throw new Error404('Карточка не найдена');
+    } else if (card.ownerId.toString() !== req.user._id) {
+      throw new Error403('Вы не можете удалить карточку другого пользователя');
+    } else {
+      Card
+        .findOneAndRemove(req.params.cardId)
+        .then((cardToDelete) => {
+          if (!cardToDelete) {
+            throw new Error404('Карточка не найдена');
+          }
+        })
+        .then(res.status(200).send(card))
+        .catch(next);
+    }
   })
   .catch(next);
 

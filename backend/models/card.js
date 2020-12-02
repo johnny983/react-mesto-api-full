@@ -9,7 +9,7 @@ const cardSchema = new Schema({
   },
   link: {
     type: String,
-    minlength: 11,
+    minlength: 10,
     required: true,
     validate: {
       validator(v) {

@@ -13,14 +13,10 @@ router.post('/', celebrate({
     authorization: Joi.string().required().length(179),
   }).unknown(true),
   body: Joi.object().keys({
-    name: Joi.string().required(),
-    link: Joi.string().regex(/^https?:\/\/[\w*-?./]*\/?$/i).required(),
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().min(10).regex(/^https?:\/\/[\w*-?./]*\/?$/i).required(),
   }),
 }), createCard);
-
-// headers: Joi.object({
-//             token: Joi.string().token().length(20).required()
-//         }).unknown()
 
 router.delete('/:cardId', celebrate({
   headers: Joi.object().keys({

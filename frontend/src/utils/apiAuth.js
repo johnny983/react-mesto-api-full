@@ -1,4 +1,3 @@
-import { apiToken } from './utils.js'
 import { getToken } from './../utils/token'
 
 class ApiAuth {
@@ -48,7 +47,6 @@ class ApiAuth {
 export const apiAuth = new ApiAuth({
   baseURL: 'http://api.johnnyonthecloud.students.nomoredomains.monster',
   headers: {
-    authorization: apiToken,
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   }

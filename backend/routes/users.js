@@ -6,13 +6,13 @@ const {
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email().min(7),
+    email: Joi.string().required().email().min(5),
     password: Joi.string().required(),
   }),
 }), createUser);
 router.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email().min(7),
+    email: Joi.string().required().email().min(5),
     password: Joi.string().required(),
   }),
 }), login);
@@ -36,8 +36,8 @@ router.patch('/me', celebrate({
     authorization: Joi.string().required().length(179),
   }).unknown(true),
   body: Joi.object().keys({
-    name: Joi.string().required(),
-    about: Joi.string().required(),
+    name: Joi.string().min(2).max(30).required(),
+    about: Joi.string().min(2).max(30).required(),
   }),
 }), changeUserInfo);
 router.patch('/me/avatar', celebrate({
