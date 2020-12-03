@@ -23,7 +23,9 @@ const getCurrentUser = (req, res, next) => User
   .catch(next);
 
 const createUser = (req, res, next) => {
-  const { email, password } = req.body;
+  const {
+    email, password, name, about,
+  } = req.body;
 
   if (!email || !password) {
     throw new Error400('Ошибочные данные');
@@ -38,9 +40,16 @@ const createUser = (req, res, next) => {
         .then((hash) => User.create({
           email,
           password: hash, // записываем хеш в базу
+          name,
+          about,
         }))
         .then((newUser) => {
-          res.status(200).send({ email: newUser.email, _id: newUser._id });
+          res.status(200).send({
+            email: newUser.email,
+            _id: newUser._id,
+            name: newUser.name,
+            about: newUser.about,
+          });
         })
         .catch((error) => res.status(500).send({ message: error }));
     })
