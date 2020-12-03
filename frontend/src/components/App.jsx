@@ -181,7 +181,9 @@ function App() {
   }
 
   React.useEffect(() => {
-    tokenCheck();
+    if (loggedIn) {
+      tokenCheck();
+    }
   }, [ loggedIn ]);
 
   React.useEffect(() => {

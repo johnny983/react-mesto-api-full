@@ -1,4 +1,4 @@
-import { getToken } from './../utils/token'
+import { getToken } from './token'
 
 class Api {
     constructor({ baseURL, headers, method = 'GET' }) {
