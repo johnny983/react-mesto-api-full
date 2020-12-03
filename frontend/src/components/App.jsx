@@ -138,11 +138,11 @@ function App() {
     apiAuth.getData('/users/me', jwt)
     .then((data) => {
       if (data) {
-        // const userInfo = {
-        //   id: data.data._id,
-        //   email: data.data.email
-        // }
-        // setUserData(userInfo)
+        const userInfo = {
+          id: data._id,
+          email: data.email
+        }
+        setUserData(userInfo)
         setLoggedIn(true)
       }
     })

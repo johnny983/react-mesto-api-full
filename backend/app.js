@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { errors } = require('celebrate');
+const { Error404 } = require('./errors/index');
 
 const app = express();
 
@@ -55,6 +56,10 @@ app.use((err, req, res, next) => {
     });
 
   next();
+});
+
+app.all('*', (req, res) => {
+  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
 
 app.listen(PORT, () => {
