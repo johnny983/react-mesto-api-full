@@ -1,15 +1,8 @@
-const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const { errors } = require('celebrate');
 const { Error404 } = require('./errors/index');
-
-const login = require('./routes/users.js');
-const auth = require('./middlewares/auth.js');
-const createUser = require('./routes/users.js');
-const cardsRoutes = require('./routes/cards.js');
-const usersRoutes = require('./routes/users.js');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -23,6 +16,13 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 const { PORT = 3000 } = process.env;
+
+const cardsRoutes = require('./routes/cards.js');
+const usersRoutes = require('./routes/users.js');
+const createUser = require('./routes/users.js');
+const login = require('./routes/users.js');
+const auth = require('./middlewares/auth.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
