@@ -1,11 +1,7 @@
-const dotenv = require('dotenv');
-
-dotenv.config();
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { NODE_ENV, JWT_SECRET = 0, SALT_ROUND } = process.env;
+const { NODE_ENV, JWT_SECRET = 'dev-secret', SALT_ROUND } = process.env;
 
 const User = require('../models/user');
 const { Error401, Error404, Error409 } = require('../errors/index');
@@ -68,7 +64,8 @@ const login = (req, res, next) => {
           return res.send({ token });
         }
         throw new Error401('Неправильный логин или пароль');
-      });
+      })
+        .catch(next);
     })
     .catch(next);
 };
@@ -111,7 +108,7 @@ const getUsers = (req, res, next) => User
   .find({})
   .then((users) => {
     if (!users.length) {
-      res.status(200).send({ message: 'Не создано ни одного пользователя' });
+      res.status(404).send({ message: 'Не создано ни одного пользователя' });
     }
     res.status(200).send(users);
   })

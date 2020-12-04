@@ -35,12 +35,14 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({})
   const [selectedCard, selectCard] = React.useState(null)
   const [regStatus, setRegStatus] = React.useState(false)
-  const [loggedIn, setLoggedIn] = React.useState(true)
+  const [loggedIn, setLoggedIn] = React.useState(false)
   const [userData, setUserData] = React.useState({})
   const [loader, setLoader] = React.useState(true)
   const [cards, setCards] = React.useState([])
-  const history = useHistory()
   const location = useLocation()
+  const history = useHistory()
+
+  console.log(loggedIn);
 
   const handleCardLike = (card) => {
     const isLiked = card.likes.some(likeOwner => likeOwner._id === currentUser._id)
@@ -121,32 +123,10 @@ function App() {
       .catch(error => console.log(error))
   }
 
-
   const handleLogin = (userData) => {
     setUserData(userData)
     setLoggedIn(true)
     history.push('/')
-  }
-
-  const tokenCheck = () => {
-    const jwt = getToken()
-
-    if (!jwt) {
-      setLoggedIn(false);
-    }
-
-    apiAuth.getData('/users/me', jwt)
-    .then((data) => {
-      if (data) {
-        const userInfo = {
-          id: data._id,
-          email: data.email
-        }
-        setUserData(userInfo)
-        setLoggedIn(true)
-      }
-    })
-    .catch(err => console.log(err));
   }
 
   const register = (URL, method, userData) => {
@@ -180,8 +160,26 @@ function App() {
     })
   }
 
-  React.useEffect(() => {
-    tokenCheck();
+React.useEffect(() => {
+  const tokenCheck = () => {
+    const jwt = getToken()
+
+    if (jwt) {
+      apiAuth.getData('/users/me', jwt)
+      .then((data) => {
+        if (data) {
+          const userInfo = {
+            id: data._id,
+            email: data.email
+          }
+          setUserData(userInfo)
+          setLoggedIn(true)
+        }
+      })
+      .catch(err => console.log(err));
+    }
+  }
+  tokenCheck();
   }, [ loggedIn ]);
 
   React.useEffect(() => {
@@ -189,6 +187,7 @@ function App() {
   }, [ location.pathname ]);
 
   React.useEffect(() => {
+  if (loggedIn) {
     api.getCards('/cards')
       .then((items) => {
         const card = items.map(card => ({
@@ -201,13 +200,16 @@ function App() {
         setCards(card)
       })
       .catch(error => console.log(error))
-  }, [])
+    }
+  }, [ loggedIn ])
 
   React.useEffect(() => {
+    if (loggedIn) {
     api.getProfile('/users/me')
       .then(result => setCurrentUser(result))
       .catch(error => console.log(error))
-  }, [])
+    }
+  }, [ loggedIn ])
 
 return (
       <CurrentUserContext.Provider value={currentUser}>
