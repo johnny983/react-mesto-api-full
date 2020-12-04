@@ -18,7 +18,7 @@ const cardSchema = new Schema({
       message: 'Вы ввели некорректный URL',
     },
   },
-  ownerId: {
+  owner: {
     type: Types.ObjectId,
     required: true,
   },

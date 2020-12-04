@@ -1,7 +1,15 @@
+const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const { errors } = require('celebrate');
+const { Error404 } = require('./errors/index');
+
+const login = require('./routes/users.js');
+const auth = require('./middlewares/auth.js');
+const createUser = require('./routes/users.js');
+const cardsRoutes = require('./routes/cards.js');
+const usersRoutes = require('./routes/users.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -15,13 +23,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 const { PORT = 3000 } = process.env;
-
-const cardsRoutes = require('./routes/cards.js');
-const usersRoutes = require('./routes/users.js');
-const createUser = require('./routes/users.js');
-const login = require('./routes/users.js');
-const auth = require('./middlewares/auth.js');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -40,13 +41,13 @@ app.get('/crash-test', () => {
 app.use('/', createUser);
 app.use('/', login);
 
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
-});
-
 app.use(errorLogger);
 
 app.use(errors());
+
+app.all('*', () => {
+  throw new Error404('Нет пользователя с таким id');
+});
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;

@@ -24,4 +24,4 @@
 
 Файловая структура проекта составлена в соответствии со схемой "Nested" методологии "БЭМ".
 
-Проектная работа доступна по адресу https://johnny983.github.io/mesto/
+Проектная работа доступна по адресу http://www.johnnyonthecloud.students.nomoredomains.monster/

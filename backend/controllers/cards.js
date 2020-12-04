@@ -3,11 +3,11 @@ const { Error404, Error403 } = require('../errors/index');
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
-  const ownerId = req.user._id;
+  const owner = req.user._id;
 
-  Card.create({ name, link, ownerId })
+  Card.create({ name, link, owner })
     .then((newCard) => {
-      res.status(200).send(newCard || 'Ошибочные данные');
+      res.status(200).send(newCard);
     })
     .catch(next);
 };
@@ -17,7 +17,7 @@ const deleteCard = (req, res, next) => Card
   .then((card) => {
     if (!card) {
       throw new Error404('Карточка не найдена');
-    } else if (card.ownerId.toString() !== req.user._id) {
+    } else if (card.owner.toString() !== req.user._id) {
       throw new Error403('Вы не можете удалить карточку другого пользователя');
     } else {
       Card

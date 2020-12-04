@@ -24,7 +24,7 @@ function Card({ loader, setLoader, onCardClick, onCardLike, onTrashClick, card }
   }
 
   const currentUser = React.useContext(CurrentUserContext)
-  const isOwn = card.ownerId === currentUser._id;
+  const isOwn = card.owner === currentUser._id;
 
 
   const trashButtonClass = (

@@ -5,7 +5,7 @@ dotenv.config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { NODE_ENV, JWT_SECRET, SALT_ROUND } = process.env;
+const { NODE_ENV, JWT_SECRET = 0, SALT_ROUND } = process.env;
 
 const User = require('../models/user');
 const {
@@ -27,10 +27,6 @@ const createUser = (req, res, next) => {
     email, password, name, about,
   } = req.body;
 
-  if (!email || !password) {
-    throw new Error400('Ошибочные данные');
-  }
-
   User.findOne({ email })
     .then((user) => {
       if (user) {
@@ -51,17 +47,13 @@ const createUser = (req, res, next) => {
             about: newUser.about,
           });
         })
-        .catch((error) => res.status(500).send({ message: error }));
+        .catch(next);
     })
     .catch(next);
 };
 
-const login = async (req, res, next) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
-
-  if (!email || !password) {
-    throw new Error400('Ошибочные данные');
-  }
 
   User.findOne({ email }).select('+password')
     .then((user) => {
@@ -120,7 +112,10 @@ const changeUserInfo = (req, res, next) => {
 const getUsers = (req, res, next) => User
   .find({})
   .then((users) => {
-    res.status(200).send(users || 'Не создано ни одного пользователя');
+    if (!users.length) {
+      res.status(200).send({ message: 'Не создано ни одного пользователя' });
+    }
+    res.status(200).send(users);
   })
   .catch(next);
 
