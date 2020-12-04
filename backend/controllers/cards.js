@@ -17,19 +17,19 @@ const deleteCard = (req, res, next) => Card
   .then((card) => {
     if (!card) {
       throw new Error404('Карточка не найдена');
-    } else if (card.owner.toString() !== req.user._id) {
-      throw new Error403('Вы не можете удалить карточку другого пользователя');
-    } else {
-      Card
-        .findOneAndRemove(req.params.cardId)
-        .then((cardToDelete) => {
-          if (!cardToDelete) {
-            throw new Error404('Карточка не найдена');
-          }
-        })
-        .then(res.status(200).send(card))
-        .catch(next);
     }
+    if (card.owner.toString() !== req.user._id) {
+      throw new Error403('Вы не можете удалить карточку другого пользователя');
+    }
+    Card
+      .findOneAndRemove(req.params.cardId)
+      .then((cardToDelete) => {
+        if (!cardToDelete) {
+          throw new Error404('Карточка не найдена');
+        }
+      })
+      .then(res.status(200).send(card))
+      .catch(next);
   })
   .catch(next);
 

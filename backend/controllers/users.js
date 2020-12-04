@@ -83,7 +83,7 @@ const changeAvatar = (req, res, next) => {
   })
     .then((newAvatar) => {
       if (!newAvatar) {
-        throw new Error404('Аватар не обновлен');
+        res.status(204).send({ message: 'Ошибка, аватар не обновлен' });
       }
       res.status(200).send(newAvatar);
     })
