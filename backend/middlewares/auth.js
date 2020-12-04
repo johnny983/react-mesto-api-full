@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET = 0 } = process.env;
 
 const { Error401 } = require('../errors/index');
 

@@ -5,7 +5,7 @@ dotenv.config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { NODE_ENV, JWT_SECRET, SALT_ROUND } = process.env;
+const { NODE_ENV, JWT_SECRET = 0, SALT_ROUND } = process.env;
 
 const User = require('../models/user');
 const { Error401, Error404, Error409 } = require('../errors/index');
