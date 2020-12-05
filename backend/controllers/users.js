@@ -79,9 +79,6 @@ const changeAvatar = (req, res, next) => {
     upsert: true, // если пользователь не найден, он будет создан
   })
     .then((newAvatar) => {
-      if (!newAvatar) {
-        res.status(204).send({ message: 'Ошибка, аватар не обновлен' });
-      }
       res.status(200).send(newAvatar);
     })
     .catch(next);
@@ -96,9 +93,6 @@ const changeUserInfo = (req, res, next) => {
     upsert: true,
   })
     .then((newUser) => {
-      if (!newUser) {
-        throw new Error404('Пользователь не обновлен');
-      }
       res.status(200).send(newUser);
     })
     .catch(next);
