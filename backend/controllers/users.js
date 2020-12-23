@@ -102,7 +102,7 @@ const getUsers = (req, res, next) => User
   .find({})
   .then((users) => {
     if (!users.length) {
-      res.status(404).send({ message: 'Не создано ни одного пользователя' });
+      throw new Error404('Не создано ни одного пользователя');
     }
     res.status(200).send(users);
   })

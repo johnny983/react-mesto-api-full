@@ -48,7 +48,7 @@ app.use(errorLogger);
 app.use(errors());
 
 app.all('*', () => {
-  throw new Error404('Нет пользователя с таким id');
+  throw new Error404('Данный ресурс не найден');
 });
 
 app.use((err, req, res, next) => {

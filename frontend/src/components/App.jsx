@@ -213,6 +213,7 @@ React.useEffect(() => {
 
 return (
       <CurrentUserContext.Provider value={currentUser}>
+        <Redirect to="/signin" />
         <Header
           setLoggedIn={setLoggedIn}
           loggedIn={loggedIn}
@@ -253,13 +254,7 @@ return (
             />
           </Route>
 
-          <Route>
-            {
-              loggedIn ?
-              <Redirect to="/" /> :
-              <Redirect to="/signin" />
-            }
-          </Route>
+          <Redirect to="/signin" />
         </Switch>
 
         <EditProfilePopup
